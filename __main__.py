@@ -99,6 +99,7 @@ async def process_messages(stream, state):
                             #SINGLE BUTTON ACTIONS
                             if 80 < note < 90:
                                 # First row of sequencer #TODO Within sequencer
+                                #TODO Play notes when clicking them
                                 active_sequencer = sequencers[state.active_voice]
                                 step = lists.leds.index(note)
                                 active_sequencer.toggleNote(step)
@@ -110,7 +111,11 @@ async def process_messages(stream, state):
                                 pass #TODO Change view page
                         else:
                             #MULTIPLE BUTTON ACTIONS
-                            pass #TODO Velocity per step goes here
+                            if pressedButtons[0]%10 > 4:
+                                active_sequencer = sequencers[state.active_voice]
+                                step = lists.leds.index(pressedButtons[1])
+                                active_sequencer.velocities[step] = lists.velocities[pressedButtons[0]]
+                             #TODO Velocity per step goes here
                     elif sequencers[state.active_voice].view.view_type == "SEQ_KEYBOARD":
                         #TODO Keyboard view
                         pass

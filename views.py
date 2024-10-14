@@ -81,7 +81,6 @@ def seq_four(top_left: int = 1, top_right: int = 2, bottom_left: int = 3, bottom
     for i in range(64):
         mod = i % 8
         div = math.trunc(i / 8)
-        print(i, mod, div)
         if (mod <= 3 and div <= 3):
             view.append(top_left)
         elif (mod > 3 and div <= 3):

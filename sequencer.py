@@ -6,14 +6,22 @@ from views import View
 
 class Sequencer():
     def __init__(self, outport, virtualOutport) -> None:
-        self.sequence = [0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0,
-                         0, 0, 0, 0, 0, 0, 0, 0]
+        self.sequence =   [0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0]
+        self.velocities = [127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127,
+                           127, 127, 127, 127, 127, 127, 127, 127]
         self.step = 0
         self.voice = 1
         self.length = 8
@@ -38,7 +46,7 @@ class Sequencer():
             #print(f'{self.voice} is running')
             newColor = self.view.view[self.step] # Get the color of the current step
             self.view.change_color(self.step, "grey") # Draw the step bar
-            await self.sendNote(self.sequence[self.step]) #Send the corresponding note
+            await self.sendNote(self.sequence[self.step], self.velocities[self.step]) #Send the corresponding note
 
             if self.step < self.length - 1:
                 await self.sendNote(self.sequence[self.step - 1], velocity=0) # Turn off last note #TODO: tenir en compte length
