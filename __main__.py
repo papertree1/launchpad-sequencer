@@ -112,10 +112,10 @@ async def process_messages(stream, state):
                         else:
                             #MULTIPLE BUTTON ACTIONS
                             if pressedButtons[0]%10 > 4:
+                                # Change the velocity of the selected step
                                 active_sequencer = sequencers[state.active_voice]
                                 step = lists.leds.index(pressedButtons[1])
                                 active_sequencer.velocities[step] = lists.velocities[pressedButtons[0]]
-                             #TODO Velocity per step goes here
                     elif sequencers[state.active_voice].view.view_type == "SEQ_KEYBOARD":
                         #TODO Keyboard view
                         pass
