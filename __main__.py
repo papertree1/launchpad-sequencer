@@ -8,7 +8,7 @@ from state import State
 from sequencer import Sequencer
 
 DRUM_VOICES = 16
-MELODIC_VOICES = 0
+MELODIC_VOICES = 3
 SEQUENCE_LENGTH = 8
 TEMPO = 240
 
@@ -32,7 +32,7 @@ def setupVoices(drumVoices: int, melVoices: int) -> list:
     for i in range(melVoices):
         seq = Sequencer(outport, virtualOutport)
         seq.length = SEQUENCE_LENGTH
-        seq.view.set_view("SEQ_KEYBOARD")
+        seq.view.set_view("SEQ_PUSH")
         seq.voice = len(sequencers)
         seq.isMelodic = True
         seq.channel = i + 1 #All voices on different cannels
@@ -73,19 +73,31 @@ async def process_messages(stream, state):
                         #SINGLE BUTTON ACTIONS
                         match note:
                             case 19:
+                                # Pause sequencers
                                 for seq in sequencers:
                                     await seq.toggleSequencer(state.tempo)
                             case 29:
+                                # Quit
                                 _quit()
+                            case 91:
+                                # Change root note (melodic)
+                                if sequencers[state.active_voice].isMelodic:
+                                    sequencers[state.active_voice].offset += 1
+                            case 92:
+                                # Change root note (melodic)
+                                if sequencers[state.active_voice].isMelodic:
+                                    sequencers[state.active_voice].offset -= 1
                             case 93:
+                                # Change active voice
                                 state.change_voice(state.active_voice - 1)
                             case 94:
+                                # Change active voice
                                 state.change_voice(state.active_voice + 1)
                             case 95:
+                                # Go to first melodic voice
                                 state.change_voice(16)
 
                     else:
-                        print(pressedButtons)
                         #MULTIPLE BUTTON ACTIONS
                         if 98 in pressedButtons and 19 in pressedButtons:
                             for seq in sequencers:
@@ -106,19 +118,39 @@ async def process_messages(stream, state):
                             elif note < 50 and note%10 <= 4:
                                 # Change the active voice
                                 state.active_voice = ((note % 10) - 1) + ((round(note / 10) - 1) * 4)
+                                sequencers[state.active_voice].view.change_color(lists.leds.index(note), "light_blue")
                                 print (state.active_voice)
                             elif 45 < note < 50:
                                 pass #TODO Change view page
                         else:
                             #MULTIPLE BUTTON ACTIONS
-                            if pressedButtons[0]%10 > 4:
+                            if pressedButtons[0]%10 > 4: #TODO is this right?
                                 # Change the velocity of the selected step
                                 active_sequencer = sequencers[state.active_voice]
                                 step = lists.leds.index(pressedButtons[1])
-                                active_sequencer.velocities[step] = lists.velocities[pressedButtons[0]]
-                    elif sequencers[state.active_voice].view.view_type == "SEQ_KEYBOARD":
-                        #TODO Keyboard view
-                        pass
+                                velocity = lists.leds.index(pressedButtons[0])
+                                active_sequencer.velocities[step] = lists.velocities[pressedButtons[0]] # Change velocity
+                                #active_sequencer.view.change_color(velocity, "purple_accent") # Change the color to reflect the velocity of the step
+
+                    elif sequencers[state.active_voice].view.view_type == "SEQ_PUSH":
+                        #KEYS + SEQ LAYOUT MAPPINGS
+                        if len(pressedButtons) == 1:
+                            if 80 < note < 90:
+                                # First row of sequencer #TODO Within sequencer
+                                #TODO Play notes when clicking them
+                                active_sequencer = sequencers[state.active_voice]
+                                step = lists.leds.index(note)
+                                active_sequencer.toggleNote(step)
+                        else:
+                            #MULTIPLE BUTTON ACTIONS
+                            if pressedButtons[0] < 40:
+                                active_sequencer = sequencers[state.active_voice]
+                                step = lists.leds.index(pressedButtons[1])
+                                if active_sequencer.sequence[step] == 0:
+                                    active_sequencer.toggleNote(step, lists.seq_and_push_keys[pressedButtons[0]])
+                                else:
+                                    active_sequencer.sequence[step] = lists.seq_and_push_keys[pressedButtons[0]]
+
                     elif sequencers[state.active_voice].view.view_type == "SEQ_FULL":
                         #64 STEP LAYOUT MAPPINGS
                         if len(pressedButtons) == 1:

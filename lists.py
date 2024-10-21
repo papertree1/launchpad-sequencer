@@ -28,14 +28,17 @@ colors = {
     16: 82,
     #...
     "blank": 0,
+    "black": 1,
     "grey": 2,
     "grey_accent": 3,
     "red": 72,
-    "blue": 41,
+    "light_blue": 29,
+    "blue": 37,
     "green": 21,
+    "green_accent": 16,
     "yellow": 97,
-    "purple": 44,
-    "purple_accent": 69
+    "purple": 43,
+    "purple_accent": 44
  } #TODO: ARRAY CONTAINING COLORS FOR EACH VOICE
 
 '''
@@ -73,4 +76,31 @@ velocities = {
     36: 97,
     37: 107,
     38: 127
+}
+
+seq_and_push_keys = {
+    11: 60, #Middle C
+    12: 62, #61
+    13: 64, #62
+    14: 65, #63
+    15: 67, #64
+    16: 69, #65
+    17: 71, #66
+    18: 72, #67
+    21: 65,
+    22: 67,
+    23: 69,
+    24: 71,
+    25: 72,
+    26: 74,
+    27: 76,
+    28: 77,
+    31: 71,
+    32: 72,
+    33: 74,
+    34: 76,
+    35: 77,
+    36: 79,
+    37: 81,
+    38: 83,
 }

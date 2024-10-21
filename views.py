@@ -19,7 +19,8 @@ class View():
             "SEQ_DRUMS": seq_and_drums(),
             "SEQ_KEYBOARD": seq_and_keyboard(),
             "SEQ_FULL": seq_full(),
-            "SEQ_FOUR": seq_four() #TODO Opció per a canviar les veus individualment
+            "SEQ_FOUR": seq_four(), #TODO Opció per a canviar les veus individualment
+            "SEQ_PUSH": seq_and_push()
         }
         self.view_type = view_sel
         self.view = views[view_sel]
@@ -29,13 +30,13 @@ class View():
 
 def empty_view() -> list:
     view = []
-    for i in range(64):
+    for _ in range(64):
         view.append("blank")
     return view
 
 def seq_and_drums() -> list:
     view = []
-    for i in range(8*4):
+    for _ in range(8*4):
         view.append("blank")
     for i in range(4):
         for j in range(8):
@@ -48,15 +49,12 @@ def seq_and_drums() -> list:
                     else:
                         view.append("grey")
                 else:
-                    if i == 1 and j == 4:
-                        view.append("purple_accent")
-                    else:
-                        view.append("purple")
+                    view.append("purple")
     return view
 
 def seq_and_keyboard() -> list:
     view = []
-    for i in range(8*4):
+    for _ in range(8*4):
         view.append("blank")
     for i in range(2):
         for i in range(2):
@@ -70,9 +68,29 @@ def seq_and_keyboard() -> list:
                     view.append("yellow")
     return view
 
+def seq_and_push() -> list:
+    view = []
+    for _ in range(8*4):
+        view.append("blank")
+    for i in range(8):
+        if i < 4:
+            view.append("blank")
+        elif i == 4:
+            view.append("grey_accent")
+        else:
+            view.append("grey")
+    j = 0
+    for i in range(8*3):
+        if i==1 or i==12 or i==16 or i==23:
+            view.append("purple")
+        else:
+            view.append("light_blue")
+    return view
+    
+
 def seq_full() -> list:
     view = []
-    for i in range(64):
+    for _ in range(64):
         view.append("blank")
     return view
 
