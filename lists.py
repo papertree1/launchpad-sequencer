@@ -39,7 +39,7 @@ colors = {
     "yellow": 97,
     "purple": 43,
     "purple_accent": 44
- } #TODO: ARRAY CONTAINING COLORS FOR EACH VOICE
+}
 
 '''
 Setting MIDI notes to easily indexable drum voices, following General MIDI
@@ -76,6 +76,44 @@ velocities = {
     36: 97,
     37: 107,
     38: 127
+}
+
+drums = {
+    41: 1,
+    42: 2,
+    43: 3,
+    44: 4,
+    31: 5,
+    32: 6,
+    33: 7,
+    34: 8,
+    21: 9,
+    22: 10,
+    23: 11,
+    24: 12,
+    11: 13,
+    12: 14,
+    13: 15,
+    14: 16
+}
+
+melodic = {
+    45: 1,
+    46: 2,
+    47: 3,
+    48: 4,
+    35: 5,
+    36: 6,
+    37: 7,
+    38: 8,
+    25: 9,
+    26: 10,
+    27: 11,
+    28: 12,
+    15: 13,
+    16: 14,
+    17: 15,
+    18: 16
 }
 
 seq_and_push_keys = {

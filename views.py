@@ -3,7 +3,10 @@ import functions
 import mido
 import time as t
 import math
-
+'''
+The View class contains all functions relating to views and drawing modes, as well as the setup for each different type.
+A View is defined as a 8x8 grid, corresponding to the pads on the launchpad that send a 'Note On' message.
+'''
 class View():
     def __init__(self, outport: mido.ports) -> None:
         self.view = empty_view()
@@ -20,7 +23,9 @@ class View():
             "SEQ_KEYBOARD": seq_and_keyboard(),
             "SEQ_FULL": seq_full(),
             "SEQ_FOUR": seq_four(), #TODO Opció per a canviar les veus individualment
-            "SEQ_PUSH": seq_and_push()
+            "SEQ_PUSH": seq_and_push(),
+            "SEQ__PUSH_VEL": seq_push_vel(),
+            "INIT": init()
         }
         self.view_type = view_sel
         self.view = views[view_sel]
@@ -32,6 +37,24 @@ def empty_view() -> list:
     view = []
     for _ in range(64):
         view.append("blank")
+    return view
+
+def init() -> list:
+    view = []
+    for _ in range(8*3):
+        view.append("yellow")
+    for i in range(8):
+        if i==0 or i==7:
+            view.append("red")
+        elif i==3 or i==4:
+            view.append("purple")
+        else:
+            view.append("blank")
+    for i in range(8*4):
+        if i%8 < 4:
+            view.append("green")
+        else:
+            view.append("light_blue")
     return view
 
 def seq_and_drums() -> list:
@@ -79,7 +102,21 @@ def seq_and_push() -> list:
             view.append("grey_accent")
         else:
             view.append("grey")
-    j = 0
+    #TODO Add four buttons for gate length per note
+    for i in range(8*3):
+        if i==1 or i==12 or i==16 or i==23:
+            view.append("purple")
+        else:
+            view.append("light_blue")
+    return view
+
+def seq_push_vel() -> list:
+    view = []
+    for _ in range(8*4):
+        view.append("blank")
+    for i in range(8):
+        if i < 4:
+            view.append("purple")
     for i in range(8*3):
         if i==1 or i==12 or i==16 or i==23:
             view.append("purple")
