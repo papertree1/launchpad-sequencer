@@ -60,6 +60,7 @@ class Sequencer():
 
             # Stop last note
             if self.step < self.length - 1:
+                print("Stop note", self.sequence[self.step - 1])
                 await self.sendNote(self.sequence[self.step - 1], velocity=0) # Turn off last note #TODO: tenir en compte length
                 if self.step != 0:
                     self.view.change_color(self.step - 1, previousColor) # Turn off last LED

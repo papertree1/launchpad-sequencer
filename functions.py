@@ -64,8 +64,8 @@ async def initDraw(inport, outport):
     for i in range(8):
         if i > 4:
             outport.send(write_led(((i*10))+19, colors["yellow"]))
-    drumVoices = 0
-    meloVoices = 0
+    drumVoices = 16
+    meloVoices = 3
     bpm = 0
     '''
     outport.send(scroll_text(False, 15, colors["green"], "Drum Voices"))
@@ -113,10 +113,12 @@ async def initDraw(inport, outport):
             elif note < 50:
                 if note%10 < 5:
                     #Drum Voice selection
+                    #TODO Fill with how many voices are active
                     drumVoices = drums[note]
                     print(drumVoices)
                 else:
                     #Melodic Voice selection
+                    #TODO Fill with how many voices are active
                     meloVoices = melodic[note]
                     print(meloVoices)
             elif note == 54 or note == 55:
@@ -127,7 +129,7 @@ async def initDraw(inport, outport):
                 break
 
     #self.view.draw()
-    return [drumVoices, meloVoices, bpm]
+    return [drumVoices, meloVoices, bpm if bpm != 0 else 120]
 '''
 Resets all the pads to their default state, without any light
 '''

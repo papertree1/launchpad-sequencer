@@ -1,5 +1,6 @@
 import mido
 import asyncio
+import threading
 import types
 import sys
 
@@ -60,11 +61,14 @@ Stop all notes
 '''
 def panic() -> None:
     virtualOutport.panic()
-
 '''
 Creates the stream that reads the incoming messages
 '''
 def make_stream():
+    # Stream reads incoming messages,
+    # callback puts messages in the queue
+    # queue holds the messages
+    # 
     loop = asyncio.get_event_loop()
     queue = asyncio.Queue()
 
@@ -81,6 +85,7 @@ def make_stream():
 The main sequencer function. Processes messages and assigns functions to certain buttons and combinations.
 '''
 async def process_messages(stream, state):
+    print(stream, state)
     pressedButtons = []
     async for message in stream:
         #print("message received:", message)
@@ -136,15 +141,15 @@ async def process_messages(stream, state):
 
                     else:
                         #MULTIPLE BUTTON ACTIONS
-                        if 98 in pressedButtons and 19 in pressedButtons:
+                        if 89 in pressedButtons and 19 in pressedButtons:
                             # Stop sequencer
                             for seq in sequencers:
                                 await seq.stopSequencer()
-                        elif 98 in pressedButtons and 91 in pressedButtons:
+                        elif 89 in pressedButtons and 91 in pressedButtons:
                             # Change root by octave (melodic)
                             if sequencers[state.active_voice].isMelodic:
                                     sequencers[state.active_voice].offset += 12
-                        elif 98 in pressedButtons and 92 in pressedButtons:
+                        elif 89 in pressedButtons and 92 in pressedButtons:
                             # Change root by octave (melodic)
                             if sequencers[state.active_voice].isMelodic:
                                     sequencers[state.active_voice].offset -= 12
@@ -221,7 +226,18 @@ if __name__ == "__main__":
         state.tempo = tempo
 
         cb, stream, queue = make_stream()
-        mido.open_input("Launchpad Mini MK3 LPMiniMK3 MIDI Out", callback=cb)
+        #mido.open_input("Launchpad Mini MK3 LPMiniMK3 MIDI Out", callback=cb) # Sends messages to the callback
+        # Start MIDI input listener in a separate thread
+        def midi_input_listener():
+            with mido.open_input("Launchpad Mini MK3 LPMiniMK3 MIDI Out", callback=cb):
+                while True:
+                    # Just keep the MIDI port open and trigger the callback when new messages come in
+                    pass
+
+        # Run MIDI input listener in a separate thread
+        midi_input_thread = threading.Thread(target=midi_input_listener, daemon=True)
+        midi_input_thread.start()
+
         msg_loop_task = asyncio.create_task(process_messages(stream, state))
         state.active_voice = 0
         await state.draw_view()
