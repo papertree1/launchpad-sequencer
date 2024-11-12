@@ -1,4 +1,5 @@
 import mido, asyncio
+import sys
 from lists import colors, drums, melodic
 from views import View
 '''
@@ -113,12 +114,22 @@ async def initDraw(inport, outport):
             elif note < 50:
                 if note%10 < 5:
                     #Drum Voice selection
-                    #TODO Fill with how many voices are active
+                    for i in range(16):
+                        #Draw how many voices are selected
+                        if i < drums[note]:
+                            outport.send(write_led(list(drums.keys())[0+i], colors["green"]))
+                        else:
+                            outport.send(write_led(list(drums.keys())[0+i], colors["green_accent"]))
                     drumVoices = drums[note]
                     print(drumVoices)
                 else:
                     #Melodic Voice selection
-                    #TODO Fill with how many voices are active
+                    for i in range(16):
+                        #Draw how many voices are selected
+                        if i < melodic[note]:
+                            outport.send(write_led(list(melodic.keys())[0+i], colors["blue"]))
+                        else:
+                            outport.send(write_led(list(melodic.keys())[0+i], colors["light_blue"]))
                     meloVoices = melodic[note]
                     print(meloVoices)
             elif note == 54 or note == 55:
@@ -127,6 +138,12 @@ async def initDraw(inport, outport):
                     if i > 4:
                         outport.send(write_led(((i*10))+19, colors["blank"]))
                 break
+            elif note == 51 or note == 58:
+                #Cancel, exit
+                reset_pads(outport)
+                outport.send(exitProgrammerMode())
+                sys.exit()
+
 
     #self.view.draw()
     return [drumVoices, meloVoices, bpm if bpm != 0 else 120]

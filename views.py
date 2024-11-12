@@ -52,7 +52,7 @@ def init() -> list:
             view.append("blank")
     for i in range(8*4):
         if i%8 < 4:
-            view.append("green")
+            view.append("green_accent")
         else:
             view.append("light_blue")
     return view
