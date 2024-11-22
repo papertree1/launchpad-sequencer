@@ -7,10 +7,16 @@ class State():
         self.outport = outport
         self.sequencers = sequencers
         self.active_voice = 0
+        self.active_steps = [0, 32]
         self.tempo = 120
 
     def change_voice(self, voice_sel) -> None:
         self.active_voice = voice_sel
+    
+    def find_melodic(self) -> int:
+        for i in range(len(self.sequencers)):
+            if self.sequencers[i].isMelodic:
+                return i
 
     async def draw_view(self) -> None:
         while True:

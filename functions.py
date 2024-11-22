@@ -81,35 +81,44 @@ async def initDraw(inport, outport):
             elif pressed == 1:
                 meloVoices = note
             elif pressed == 2:
-                bpm = note * 10 #TODO fer be
+                bpm = note * 10 
             elif pressed > 2:
                 break
             pressed += 1
     '''
     for msg in inport:
         type, ch, note, vel = unpack_message(msg)
-        if type == 'note_on' or type == 'control_change':
+        if (type == 'note_on' or type == 'control_change') and vel != 0:
             #print(note)
             if note > 60:
                 #BPM Selection
                 if 90 > note > 80:
                     #First row, 100ths
-                    bpm = (bpm % 100) + (100*(note%10))
                     for i in range(9):
                         outport.send(write_led(81+i, colors["yellow"]))
-                    outport.send(write_led(note, colors["grey"]))
+                    if note%10 == bpm//100:
+                        bpm = bpm%100
+                    else:
+                        bpm = (bpm % 100) + (100*(note%10))
+                        outport.send(write_led(note, colors["grey"]))
                 elif 80 > note > 70:
                     #Second row, 10ths:
-                    bpm = (bpm//100 * 100) + (note%10)*10 + (bpm%10)
                     for i in range(9):
                         outport.send(write_led(71+i, colors["yellow"]))
-                    outport.send(write_led(note, colors["grey"]))
+                    if note%10 == (bpm//10)%10:
+                        bpm = (bpm//100 * 100) + (bpm%10)
+                    else:
+                        bpm = (bpm//100 * 100) + (note%10)*10 + (bpm%10)
+                        outport.send(write_led(note, colors["grey"]))
                 elif 70 > note > 60:
                     #Third row, 1s:
-                    bpm = (bpm // 10) * 10 + (note%10)
                     for i in range(9):
                         outport.send(write_led(61+i, colors["yellow"]))
-                    outport.send(write_led(note, colors["grey"]))
+                    if note%10 == bpm%10:
+                        bpm = (bpm // 10) * 10
+                    else:
+                        bpm = (bpm // 10) * 10 + (note%10)
+                        outport.send(write_led(note, colors["grey"]))
                 print(bpm)
             elif note < 50:
                 if note%10 < 5:
@@ -121,7 +130,7 @@ async def initDraw(inport, outport):
                         else:
                             outport.send(write_led(list(drums.keys())[0+i], colors["green_accent"]))
                     drumVoices = drums[note]
-                    print(drumVoices)
+                    #print(drumVoices)
                 else:
                     #Melodic Voice selection
                     for i in range(16):
@@ -131,7 +140,7 @@ async def initDraw(inport, outport):
                         else:
                             outport.send(write_led(list(melodic.keys())[0+i], colors["light_blue"]))
                     meloVoices = melodic[note]
-                    print(meloVoices)
+                    #print(meloVoices)
             elif note == 54 or note == 55:
                 #Confirm, exit
                 for i in range(8):
@@ -140,13 +149,38 @@ async def initDraw(inport, outport):
                 break
             elif note == 51 or note == 58:
                 #Cancel, exit
-                reset_pads(outport)
                 outport.send(exitProgrammerMode())
                 sys.exit()
 
 
-    #self.view.draw()
     return [drumVoices, meloVoices, bpm if bpm != 0 else 120]
+
+def check_transposition(state):
+    sequencers = state.sequencers
+    active_voice = state.active_voice
+    offset = sequencers[active_voice].offset
+    outport = state.outport
+    up_led = 91
+    down_led = 92
+    if offset == 24:
+        outport.send(write_led(up_led, colors["blue"]))
+    elif 24 > offset > 12:
+        outport.send(write_led(up_led, colors["light_blue"]))
+    if offset == 12:
+        outport.send(write_led(up_led, colors["green"]))
+    elif 12 > offset > 0:
+        outport.send(write_led(up_led, colors["green_accent"]))
+    elif offset == 0:
+        outport.send(write_led(up_led, colors["blank"]))
+        outport.send(write_led(down_led, colors["blank"]))
+    elif 0 > offset > -12:
+        outport.send(write_led(down_led, colors["green_accent"]))
+    elif offset == -12:
+        outport.send(write_led(down_led, colors["green"]))
+    elif -12 > offset > -24:
+        outport.send(write_led(down_led, colors["light_blue"]))
+    elif offset == -24:
+        outport.send(write_led(down_led, colors["blue"]))
 '''
 Resets all the pads to their default state, without any light
 '''

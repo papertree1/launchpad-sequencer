@@ -102,7 +102,6 @@ def seq_and_push() -> list:
             view.append("grey_accent")
         else:
             view.append("grey")
-    #TODO Add four buttons for gate length per note
     for i in range(8*3):
         if i==1 or i==12 or i==16 or i==23:
             view.append("purple")
