@@ -10,6 +10,15 @@ from sequencer import Sequencer
 
 SEQUENCE_LENGTH = 8
 
+#TODO Fix out of ranges 
+#TODO 4-voice view
+'''
+TODO BUGS:
+    - White light is on after pausing and playing, stays.
+    - Transposition indicator stays when changing voice.
+    - Keys doesn't draw sequence lights
+
+'''
 # Open MIDI Ports
 inport = mido.open_input("Launchpad Mini MK3 LPMiniMK3 MIDI Out")
 outport = mido.open_output("Launchpad Mini MK3 LPMiniMK3 MIDI In")
@@ -25,7 +34,7 @@ def setupVoices(drumVoices: int, melVoices: int) -> list:
     for i in range(drumVoices):
         seq = Sequencer(outport, virtualOutport)
         seq.length = SEQUENCE_LENGTH
-        seq.view.set_view("SEQ_DRUMS")
+        seq.view.set_view("SEQ_DRUMS", view=i)
         seq.voice = len(sequencers)
         seq.isMelodic = False
         seq.channel = 0 #All drums on the same channel
@@ -116,6 +125,10 @@ async def process_messages(stream, state):
                             case 94:
                                 # Change active voice
                                 state.change_voice(state.active_voice + 1)
+                            case 95:
+                                # Enter 4-voice view
+                                print("h")
+                                state.change_view("SEQ_FOUR")
                             case 96:
                                 # Go to first drum voice
                                 state.change_voice(0)
@@ -154,7 +167,7 @@ async def process_messages(stream, state):
                             elif note < 50 and note%10 <= 4:
                                 # Change the active voice
                                 state.active_voice = ((note % 10) - 1) + ((round(note / 10) - 1) * 4)
-                                sequencers[state.active_voice].view.change_color(lists.leds.index(note), "light_blue")
+                                state.change_voice(state.active_voice)
                                 await sequencers[state.active_voice].sendNote(1)
                                 print (state.active_voice)
                             elif 45 <= note < 50:
@@ -222,6 +235,7 @@ if __name__ == "__main__":
         
         outport.send(functions.enterProgrammerMode())
         drumVoices, melVoices, tempo = await functions.initDraw(inport, outport)
+        #melVoices = 0
         state = State(outport, setupVoices(drumVoices, melVoices))
         state.tempo = tempo
 

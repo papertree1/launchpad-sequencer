@@ -45,38 +45,35 @@ class Sequencer():
         self.isRunning = True
         self.tempo = tempo
         self.calculateTempo(state)
-        print(self.tempo_s)
-        previousColor = self.view.view[self.step-1]
+        previousColor = self.view.view[(self.step-1)%self.length]
 
         while self.isRunning:
             #print(f'{self.voice} is running')
-            # Play the note
-            newColor = self.view.view[self.step%32] # Get the color of the current step
+            if self.voice == state.active_voice:
+                # Draw the sequence if the sequencer is active
+                newColor = state.draw_view_live(previousColor)
+                previousColor = newColor
+            '''
+            newColor = self.view.view[self.step%self.length] # Get the color of the current step
             if state.active_steps[0] <= self.step < state.active_steps[1]:
-                self.view.change_color((self.step%32), "grey") # Draw the step bar
-            note = self.sequence[self.step] + self.offset if self.sequence[self.step] != 0 else 0
-            await self.sendNote(note, self.velocities[self.step]) # Send the corresponding note
+                self.view.change_color((self.step%self.length), "grey") # Draw the step bar
             if self.isMelodic:
                 self.drawNotes()
             else:
                 self.drawVelocity()
+            '''
+            
+            # Play the note
+            note = self.sequence[self.step] + self.offset if self.sequence[self.step] != 0 else 0
+            await self.sendNote(note, self.velocities[self.step]) # Send the corresponding note
+            await self.sendNote(self.sequence[(self.step-1)%self.length], velocity=0) # Turn off last note
 
-            # Stop last note
+            await self._sleep()
+
             if self.step < self.length - 1:
-                await self.sendNote(self.sequence[self.step - 1], velocity=0) # Turn off last note
-                if self.step != 0:
-                    self.view.change_color((self.step%32) - 1, previousColor) # Turn off last LED
-                await self._sleep()
                 self.step += 1
             else: # Last step
-                self.view.change_color((self.step%32) - 1, previousColor) # Turn off last LED
-                await self.sendNote(self.sequence[self.step - 1], velocity=0)
-                await self._sleep()
-                self.view.change_color((self.step%32), newColor) # Turn off last LED
-                await self.sendNote(self.sequence[self.step], velocity=0)
                 self.step = 0
-            
-            previousColor = newColor
 
     '''
     Pauses the sequencer for the time set by the tempo
@@ -100,8 +97,7 @@ class Sequencer():
             await self.pauseSequencer()
             self.run_task.cancel()
         else:
-            
-            #self.outport.send(mido.Message('note_on', channel=1, note=19, velocity=5)) # Flashing red when playing
+            self.outport.send(mido.Message('note_on', channel=1, note=19, velocity=5)) # Flashing red when playing
             self.run_task = asyncio.create_task(self.runSequencer(state, tempo))
         await asyncio.sleep(0)
     '''

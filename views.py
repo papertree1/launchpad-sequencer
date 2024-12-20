@@ -1,6 +1,7 @@
-from lists import leds, colors
+from lists import leds, colors, drumLeds
 import functions
 import mido
+import asyncio
 import time as t
 import math
 '''
@@ -10,6 +11,7 @@ A View is defined as a 8x8 grid, corresponding to the pads on the launchpad that
 class View():
     def __init__(self, outport: mido.ports) -> None:
         self.view = empty_view()
+        self.view_type = "INIT"
         self.outport = outport
 
     def draw(self) -> None:
@@ -17,9 +19,9 @@ class View():
             square = square%16 if isinstance(square, int) else square
             self.outport.send(functions.write_led(leds[i], colors[square]))
     
-    def set_view(self, view_sel) -> None:
+    def set_view(self, view_sel, view:int=0) -> None:
         views = {
-            "SEQ_DRUMS": seq_and_drums(),
+            "SEQ_DRUMS": seq_and_drums(view),
             "SEQ_KEYBOARD": seq_and_keyboard(),
             "SEQ_FULL": seq_full(),
             "SEQ_FOUR": seq_four(), #TODO Opció per a canviar les veus individualment
@@ -57,22 +59,20 @@ def init() -> list:
             view.append("light_blue")
     return view
 
-def seq_and_drums() -> list:
+def seq_and_drums(voice: int) -> list:
     view = []
-    for _ in range(8*4):
-        view.append("blank")
-    for i in range(4):
-        for j in range(8):
-            if j < 4:
-                view.append("green")
-            else:
-                if i == 0:
-                    if j == 4:
-                        view.append("grey_accent")
-                    else:
-                        view.append("grey")
+    for i in range(64):
+        if i<32:
+            view.append("blank")
+        else:
+            if i%8 < 4:
+                print(i, drumLeds[voice])
+                if i == drumLeds[voice]:
+                    view.append("light_blue")
                 else:
-                    view.append("purple")
+                    view.append("green")
+            else:
+                view.append("purple")
     return view
 
 def seq_and_keyboard() -> list:
