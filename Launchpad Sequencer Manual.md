@@ -9,7 +9,7 @@ A l’iniciar el programa, el dispositiu adoptarà l’estat inicial, on es pode
 - Tempo  
 - Número de veus rítmiques  
 - Número de veus melòdiques
-**![inicial.png](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdSEZX8LZGwr49TrhHoEoo5nHEdW2_SjPzqbZk88KwV0b3vLgBxcHmoZ9gZm6jsjpiEUhyxLuttrM5zTnRl1Z2o6nRmN-YtFGY8Kvs5l1MwRbdsCoDDY1OFb4SKu9q23BJEScfErg?key=5-l2e9cINXIQwAhx5ugxKWI_)
+![inicial.png](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdSEZX8LZGwr49TrhHoEoo5nHEdW2_SjPzqbZk88KwV0b3vLgBxcHmoZ9gZm6jsjpiEUhyxLuttrM5zTnRl1Z2o6nRmN-YtFGY8Kvs5l1MwRbdsCoDDY1OFb4SKu9q23BJEScfErg?key=5-l2e9cINXIQwAhx5ugxKWI_)
 
 ## **Selecció de tempo**
 
