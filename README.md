@@ -2,6 +2,9 @@
 Aquest projecte consisteix en la creació d'un seqüenciador de passos que fa servir com a interfície un [Novation Launchpad Mini Mk3](https://novationmusic.com/products/launchpad-mini-mk3). 
 Parteixo amb la base d'un projecte que havia començat, programat amb Python i la [Llibreria MIDO](https://mido.readthedocs.io/en/stable/index.html).
 
+# Manual del projecte final
+El manual es pot trobar [aquí](https://github.com/papertree1/launchpad-sequencer/blob/main/Launchpad%20Sequencer%20Manual.md)
+
 # Base inicial
 En l'estat inicial, el projecte té les següents funcionalitats implementades:
 - Un seqüenciador de passos de llargada variable ($\leq$ 64) avança amb fins a dues veus amb alçada fixa
