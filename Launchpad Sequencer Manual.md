@@ -72,6 +72,7 @@ A la part superior de la seqüència, els botons amb fletxes amunt i avall perme
 ## **Operacions globals**
 
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcr_T4dCLkvMgGdkOnaZGJdm8qmwfRs7S5uu7S1Dy1bquhWOGbBSfx-E2tcIvithr7waA2ZlmUVpsu841PMy-gnrJFxbUpRz5seZZExq63qnueQkPrZoNs9kttDM2ZW0M-iXvox3A?key=5-l2e9cINXIQwAhx5ugxKWI_)**
+
 Les dues disposicions anteriors comparteixen funcionalitats mitjançant els botons exteriors del Launchpad (amb marges grisos). 
 
 ### **Canvi de veu**
