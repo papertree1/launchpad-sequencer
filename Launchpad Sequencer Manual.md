@@ -65,6 +65,7 @@ La part inferior dreta serveix com a modificador de la velocitat (*velocity*) de
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdOfJHC2O4opTSli-e8rRQ3GkwKfEbZS_1gpEXtbTSrQNBwVoXVUt-oDG3XF4c5jKpD4eXNdrERPwAPb6gA8WY5vuCoPQr5fQvgI1NEGnDNVEz9hM0M4eUfecpxB7II0Nexk5ox2w?key=5-l2e9cINXIQwAhx5ugxKWI_)**
 ### Edició de notes
 La part inferior de la vista de seqüència melòdica, il·luminada amb llum blava i lila, permet la selecció de notes dels diferents passos de la seqüència. Per a canviar la nota d’un pas, només cal prémer la nota desitjada seguit del pas on es vol aplicar. Aquesta secció segueix una disposició [isomètrica](https://hearandknow.wordpress.com/2014/03/15/the-isomorphic-note-layout/).
+
 Aquest sistema permet tant editar notes ja existents com afegir notes a espais buits.
 ### Transposició
 A la part superior de la seqüència, els botons amb fletxes amunt i avall permeten la transposició de tota la seqüència per semitons. Amb el botó *shift*, la transposició va per octaves.
@@ -93,3 +94,9 @@ L’ús conjunt amb el botó *shift* para la reproducció de les seqüències, s
 ### **Panic**
 
 Envia pel canal MIDI utilitzat el missatge de *panic*, i para totes les notes reproduint-se.
+
+# **Comunicació MIDI**
+
+Fent servir un canal MIDI virtual, amb nom "From MIDO", el seqüenciador envia missatges MIDI estàndards.
+
+Cada veu té assignada un canal MIDI, amb totes les veus rítmiques ajuntades al Canal 1, i cada veu melòdica corresponent al següent número.
